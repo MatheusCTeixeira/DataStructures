@@ -2,8 +2,8 @@
 
 ## Estruturas implementadas:
 - :thumbsup: [Árvore Binária (Python)](#Árvore-Binária)
-- :soon: [Árvore AVL (Java)](#Árvore-AVL)
-- :hourglass: [Árvore 2-3](#Árvore-2-3)
+- :thumbsup: [Árvore AVL (Java)](#Árvore-AVL)
+- :soon: [Árvore 2-3](#Árvore-2-3)
 - :hourglass: [Árvore B](#Árvore-B)
 
 
