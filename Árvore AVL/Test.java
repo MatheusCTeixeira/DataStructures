@@ -8,16 +8,19 @@ import java.util.Set;
 
 class Test {
 
-    static Set<Integer> getMock(int size, int from, int to) {
+    static List<Integer> getMock(int size, int from, int to) {
         Set<Integer> mock = new HashSet<Integer>();
         Random r = new Random();
         while (mock.size() < size)
             mock.add(r.nextInt(to-from) + from);
 
-        return mock;
+        ArrayList<Integer> mockAsList = new ArrayList<>();
+        mockAsList.addAll(mock);
+
+        return mockAsList;
     }
 
-    static boolean testIfAllValuesArePresent(Tree tree, Set<Integer> dataInserted) {
+    static boolean testIfAllValuesArePresent(Tree tree, List<Integer> dataInserted) {
 
         for (Integer data : dataInserted) {
             if (!tree.isPresent(data)) return false;
@@ -47,24 +50,44 @@ class Test {
         return true;
     }
 
+
     public static void main(String args[]) {
         boolean result = true;
-        while (result) {
-            Set<Integer> mock = getMock(1000, -10000000, 10000000);
-            System.out.println("Adding data...");
+        int times = 0;
+        final int MAX_TIMES = 2000;
+        final int MAX_RANDOM_DATA = 2000;
+
+        System.out.print("Testing datastruct... ");
+        while (result && times++ < MAX_TIMES) {
+            // Gera valores aleatórios.
+            List<Integer> mock =
+                getMock(MAX_RANDOM_DATA, 0, Integer.MAX_VALUE);
 
             Tree tree = new Tree();
-            for (Integer data : mock) {
+
+            // Insere os valores na árvore mantendo-a balanceada.
+            for (Integer data : mock)
                 tree.add(data);
+
+            // Remove alguns valores da árvore.
+            for (Integer data: mock.subList(0, 500)) {
+                if (!tree.isPresent(data)) result = false;
+                tree.delete(data);
             }
-            System.out.println("Data added.");
-            System.out.println("Testing data...");
 
-            result = testIfAllValuesArePresent(tree, mock);
-            result = result && testBalancement(tree);
+            // Testa se os valores que não foram removidos ainda estão na
+            // árvore.
+            result = result &&
+                testIfAllValuesArePresent(tree, mock.subList(500, mock.size()));
 
-            System.out.println("Test passed! Ok");
+            // Testa o balanceamento da árvore após a remoção de alguns valores.
+            result = result &&
+                testBalancement(tree);
         }
-        System.out.println("Error found!");
+
+        if (result)
+            System.out.println("All testes passed!");
+        else
+            System.out.println("My implementation has errors D:");
     }
 }

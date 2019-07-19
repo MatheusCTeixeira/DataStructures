@@ -28,7 +28,10 @@ public class Node {
     }
 
     public void setLeftChild(Node leftChild) {
-        if (leftChild != null) leftChild.parent = this;
+        if (leftChild != null) {
+
+            leftChild.parent = this;
+        }
 
         leftBranch = leftChild;
     }
@@ -38,7 +41,10 @@ public class Node {
     }
 
     public void setRightChild(Node rightChild) {
-        if (rightChild != null) rightChild.parent = this;
+        if (rightChild != null) {
+
+            rightChild.parent = this;
+        }
 
         rightBranch = rightChild;
     }
@@ -73,5 +79,13 @@ public class Node {
 
     public boolean isLeaf() {
         return (leftBranch == null && rightBranch == null);
+    }
+
+    public boolean isLeftChild(Node node) {
+        return node == leftBranch;
+    }
+
+    public boolean isRightChild(Node node) {
+        return node == rightBranch;
     }
 }

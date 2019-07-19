@@ -6,7 +6,8 @@ public class Tree {
 
     public void print() {
         ArrayList<Node> nodes = new ArrayList();
-        nodes.add(this.root);
+        if (this.root != null) nodes.add(this.root);
+
         while (!nodes.isEmpty()) {
             Node currentNode = nodes.remove(0);
 
@@ -18,6 +19,8 @@ public class Tree {
             if (currentNode.getRightChild() != null)
                 nodes.add(currentNode.getRightChild());
         }
+
+        System.out.println();
     }
 
     public void add(int value) {
@@ -32,7 +35,7 @@ public class Tree {
         balance(newNode);
     }
 
-    public boolean isPresent(int value) {
+    private Node findNode(int value) {
         // Verifica se um nó está presente na árvore.
         Node temp = this.root;
 
@@ -43,16 +46,169 @@ public class Tree {
                 temp = temp.getLeftChild();
             else if (value > temp.getValue())
                 temp = temp.getRightChild();
-            }
+        }
+
+        return temp;
+    }
+
+    private Node getRightmostChild(Node node) {
+        // Procura pelo nó mais à direita a partir de "node".
+        Node temp = node;
+
+        while (temp.getRightChild() != null)
+            temp = temp.getRightChild();
+
+        return temp;
+    }
+
+    private Node getLeftmostChild(Node node) {
+        // Procura pelo nó mais à direita a partir de "node".
+        Node temp = node;
+
+        while (temp.getLeftChild() != null)
+            temp = temp.getLeftChild();
+
+        return temp;
+    }
+
+    public boolean isPresent(int value) {
+        // Procura pelo Node.
+        Node temp = findNode(value);
 
         // Se temp referenciar uma instancia de Node e o valor for igual ao
         // procurado, retorne true.
         return (temp != null && temp.getValue() == value);
     }
 
-    public void delete(int value) {
+    public void delete(int value)  {
+        Node target = findNode(value);
+        Node toUpdate = null;
+        if (target == null) return;
 
+        Node targetParent = target.getParent();
+        toUpdate = targetParent;
+
+        // Há uns 10^8 casos possíveis. (Sarcasm detected!)
+        // 1   - O nó a ser removido possui um filho à esquerda.
+        // 1.1 - Esse filho possui filhos à direita. Neste caso pegue o filho
+        //       mais à direita, chamado nó "rightmost". Faça que o pai de
+        //       "rightmost" aponte para o filho à esquerda dele. E substitua
+        //       "rightmost" no nó a ser removido.
+        // 1.2 - Esse filho não possui filhos à direita. Neste caso apenas faça
+        //       o pai do nó a ser removido apontar para o filho de nó que será
+        //       removido.
+        // 2   - O nó a ser removido possui um filho à direita.
+        // 2.1 - Esse filho possui filhos à esquerda. Neste caso pegue o filho
+        //       mais à esquerda, chamado nó "leftmost". Faça que o pai de
+        //       "leftmost" aponte para o filho à direita dele. E substitua
+        //       "leftmost"  no nó a ser removido.
+        // 2.2 - Esse filho não possui filhos à esquerda. Portanto, apenas faça
+        //       que o seu pai aponte para o seu filho à direita.
+        // 3   - O nó a ser removido é uma folha e talvez a raíz, ao mesmo
+        //       tempo. Neste caso substitua o ponteiro do pai para "null" e se
+        //       ele for uma raíz, faça que ele aponte para o nó que o
+        //       substitui.
+
+        // Tem filho à esquerda (1.X).
+        if (target.getLeftChild() != null) {
+            Node targetLeftChild = target.getLeftChild();
+
+            // O filho não tem filhos à direita (1.2).
+            if (targetLeftChild.getRightChild() == null) {
+                if (targetParent == null) {
+                    root = target.getLeftChild();
+                } else if (targetParent.getLeftChild() == target) {
+                    targetParent.setLeftChild(targetLeftChild);
+                } else {
+                    targetParent.setRightChild(targetLeftChild);
+                }
+
+                targetLeftChild.setRightChild(target.getRightChild());
+
+            } else {
+                // O filho tem filhos à direita (1.1).
+                Node rightmostChild = getRightmostChild(targetLeftChild);
+                Node rightmostParent = rightmostChild.getParent();
+                toUpdate = rightmostParent;
+
+                // O filho mais à esqueda tem filhos à direita.
+                if (rightmostParent.getLeftChild() == rightmostChild)
+                    rightmostParent.setLeftChild(rightmostChild.getLeftChild());
+                else
+                    rightmostParent.setRightChild(rightmostChild.getLeftChild());
+
+                // Substitui o nó mais à direita no destino.
+                if (targetParent == null)
+                    root = rightmostChild;
+                else if (targetParent.getLeftChild() == target)
+                    targetParent.setLeftChild(rightmostChild);
+                else
+                    targetParent.setRightChild(rightmostChild);
+
+                rightmostChild.setLeftChild(target.getLeftChild());
+                rightmostChild.setRightChild(target.getRightChild());
+            }
+        } else if (target.getRightChild() != null) {
+            // O nó não possi filho à esquera, mas possui à direita (2.X).
+            Node targetRightChild = target.getRightChild();
+
+            // O filho não possui filho à esquerda (2.2).
+            if (targetRightChild.getLeftChild() == null) {
+                if (targetParent == null)
+                    root = target.getRightChild();
+                else if (targetParent.getLeftChild() == target)
+                    targetParent.setLeftChild(targetRightChild);
+                else
+                    targetParent.setRightChild(targetRightChild);
+
+               // targetRightChild.setLeftChild(target.getLeftChild());
+
+            } else {
+                // O filho possui filhos à esquerda (2.1).
+                Node leftmostChild = getLeftmostChild(targetRightChild);
+                Node leftmostParent = leftmostChild.getParent();
+                toUpdate = leftmostParent;
+
+                // O filho mais à esquerda do filho à direita possui filhos à
+                // direita.
+                if (leftmostParent.getLeftChild() == leftmostChild)
+                    leftmostParent.setLeftChild(leftmostChild.getRightChild());
+                else
+                    leftmostParent.setRightChild(leftmostChild.getRightChild());
+
+                // Substitui o nó mais a esquerda no destino.
+                if (targetParent == null)
+                    root = leftmostChild;
+                else if (targetParent.getLeftChild() == target)
+                    targetParent.setLeftChild(leftmostChild);
+                else
+                    targetParent.setRightChild(leftmostChild);
+
+                leftmostChild.setLeftChild(target.getLeftChild());
+                leftmostChild.setRightChild(target.getRightChild());
+            }
+        } else {
+            // Caso o nó a ser removido seja uma folha (e, possivelmente, uma
+            // raíz) (3).
+            if (targetParent == null) {
+                root = null;
+            } else {
+                if (targetParent.isLeftChild(target))
+                    targetParent.setLeftChild(null);
+                else
+                    targetParent.setRightChild(null);
+            }
+        }
+
+        // Mantém o conceito da àrvore AVL.
+        if (root != null) {
+            root.setAsRoot();
+            updateHeigth(root);
+            if (toUpdate == null) toUpdate = root;
+            balance(toUpdate);
+        }
     }
+
 
     /** Adiciona o nó como sendo filho de "parent" e retorna pai onde foi inse-
      *  rido.
