@@ -12,6 +12,6 @@
 ## Árvore AVL
 ![AVL Tree](https://miro.medium.com/max/1200/0*Vi3aQ9sY9Yu4VNpa.png)
 ## Árvore 2-3
-![2-3 Tree](https://image.slidesharecdn.com/lecture12-140420071535-phpapp01/95/23-tree-38-638.jpg?cb=1397978187)
+![2-3 Tree](https://cdncontribute.geeksforgeeks.org/wp-content/uploads/Search_2-3Tree_img3.png)
 ## Árvore B
-![B Tree](https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/B-tree-definition.png/400px-B-tree-definition.png)
+![B Tree](https://static.javatpoint.com/ds/images/b-tree.png)
