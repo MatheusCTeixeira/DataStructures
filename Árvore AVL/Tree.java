@@ -421,11 +421,11 @@ public class Tree {
     }
 
     private void leftRightRotation(Node node) {
-        // Simplica as referências.
+        // Simplifica as referências.
         Node leftChild      = node.getLeftChild();
         Node leftRightChild = leftChild.getRightChild();
 
-        // Lêia: DOMINIO/data_structures_algorithms/avl_tree_algorithm.htm
+        // Leia: DOMINIO/data_structures_algorithms/avl_tree_algorithm.htm
         // onde DOMINIO = https://www.tutorialspoint.com
         node.setLeftChild(leftRightChild);
         leftChild.setRightChild(leftRightChild.getLeftChild());
@@ -435,7 +435,7 @@ public class Tree {
     }
 
     private void rightRotation(Node node) {
-        // Simplica as referências.
+        // Simplifica as referências.
         Node parent    = node.getParent();
         Node leftChild = node.getLeftChild();
 
@@ -461,11 +461,11 @@ public class Tree {
     }
 
     private void rightLeftRotation(Node node) {
-        // Simplica as referências.
+        // Simplifica as referências.
         Node rightChild     = node.getRightChild();
         Node rightLeftChild = rightChild.getLeftChild();
 
-        // Lêia: DOMINIO/data_structures_algorithms/avl_tree_algorithm.htm
+        // Leia: DOMINIO/data_structures_algorithms/avl_tree_algorithm.htm
         // onde DOMINIO = https://www.tutorialspoint.com
         node.setRightChild(rightLeftChild);
         rightChild.setLeftChild(rightLeftChild.getRightChild());
